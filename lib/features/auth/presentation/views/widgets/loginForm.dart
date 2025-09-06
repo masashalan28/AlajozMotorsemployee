@@ -1,17 +1,15 @@
-import 'package:AlajozMotorsemployee/features/home/presentation/views/home.dart';
+//import 'package:AlajozMotorsemployee/features/home/presentation/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../manager/user_cubit.dart';
+import '../forgot_password_screen.dart';
 
 import '../../../../../core/widgets/CustomButton.dart';
 import 'auth_text_field.dart';
 
 class LoginForm extends StatefulWidget {
-  final bool rememberMe;
-  final ValueChanged<bool> onRememberChanged;
-
   const LoginForm({
     super.key,
-    required this.rememberMe,
-    required this.onRememberChanged,
   });
 
   @override
@@ -20,20 +18,31 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EmployeeHomeScreen(
-            employeeName: 'Ahmed',
-            loginTime: DateTime.now(),
-          ),
-        ),
-      );
-    }
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
+
+ void _submitForm() {
+  if (_formKey.currentState!.validate()) {
+   
+    final rawPhone = _phoneController.text.trim();
+
+ 
+    final phone = '+963$rawPhone';
+    final password = _passwordController.text.trim();
+
+    context.read<UserCubit>().login(
+          phone: phone,
+          password: password,
+        );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -41,41 +50,34 @@ class _LoginFormState extends State<LoginForm> {
       key: _formKey,
       child: Column(
         children: [
-          phonTextField(),
+          PhoneTextField(controller: _phoneController),
           const SizedBox(height: 15),
-          PasswordTextField(),
+          PasswordTextField(controller: _passwordController),
           const SizedBox(height: 20),
-          CustomButton(
-            text: 'Log in',
-            onPressed: _submitForm,
+          BlocBuilder<UserCubit, UserState>(
+            builder: (context, state) {
+              return CustomButton(
+                text: state is UserLoading ? 'Logging in...' : 'Log in',
+                onPressed: state is UserLoading ? () {} : _submitForm,
+              );
+            },
           ),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Checkbox(
-                    value: widget.rememberMe,
-                    onChanged: (value) {
-                      widget.onRememberChanged(value ?? false);
-                    },
-                  ),
-                  const Text('Remember me'),
-                ],
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text('Need help? Reset'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ForgotPasswordScreen(),
+                ),
+              );
+            },
             child: const Text(
-              'New here? Create an account',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              'Need help? Reset Password',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
             ),
           ),
         ],

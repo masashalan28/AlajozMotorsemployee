@@ -1,15 +1,21 @@
 import 'package:AlajozMotorsemployee/core/utils/assets.dart';
 import 'package:flutter/material.dart';
+import '../../../../auth/data/models/user_model.dart';
 
 import 'TextField_profile.dart';
 
 class EmployeeProfileBody extends StatelessWidget {
   final bool isEditable;
   final VoidCallback toggleEdit;
+  final VoidCallback? cancelEdit;
+  final UserModel? userData;
+
   const EmployeeProfileBody({
     super.key,
     required this.isEditable,
     required this.toggleEdit,
+    this.cancelEdit,
+    this.userData,
   });
 
   @override
@@ -41,62 +47,51 @@ class EmployeeProfileBody extends StatelessWidget {
                         backgroundImage: AssetImage(AssetsData.profile),
                       ),
                       const SizedBox(width: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("@John.Doe",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("Edit profile",
+                          Text(
+                            userData?.name ?? "Loading...",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const Text("Edit profile",
                               style: TextStyle(color: Colors.grey)),
                         ],
                       ),
                       const Spacer(
                         flex: 1,
                       ),
-                      IconButton(
-                        icon: Icon(isEditable ? Icons.check : Icons.edit,
-                            color: Colors.black),
-                        onPressed: toggleEdit,
-                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
                   buildLabel("Full name"),
-                  EmployeeTextField(value: "John Doe", isEditable: isEditable),
-                  buildLabel("Employee ID"),
-                  EmployeeTextField(value: "E123456", isEditable: isEditable),
-                  buildLabel("Contact number"),
                   EmployeeTextField(
-                      value: "+00 987 654 321", isEditable: isEditable),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildLabel("Date of joining"),
-                            EmployeeTextField(
-                                value: "01/15/2020", isEditable: isEditable),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildLabel("Department"),
-                            EmployeeTextField(
-                                value: "Marketing", isEditable: isEditable),
-                          ],
-                        ),
-                      ),
-                    ],
+                    value: userData?.name ?? "Loading...",
+                    isEditable: false,
                   ),
-                  buildLabel("Skills"),
+                  buildLabel("Phone number"),
                   EmployeeTextField(
-                    value: "SEO, Content Creation, Analytics",
-                    isEditable: isEditable,
+                    value: userData?.phone ?? "Loading...",
+                    isEditable: false,
+                  ),
+                  buildLabel("Email"),
+                  EmployeeTextField(
+                    value: userData?.email ?? "Loading...",
+                    isEditable: false,
+                  ),
+                  buildLabel("Salary"),
+                  EmployeeTextField(
+                    value: userData?.salary != null
+                        ? "${userData!.salary} SYP"
+                        : "Loading...",
+                    isEditable: false,
+                  ),
+                  buildLabel("Hired Date"),
+                  EmployeeTextField(
+                    value: userData?.hiredDate != null
+                        ? "${userData!.hiredDate!.day}/${userData!.hiredDate!.month}/${userData!.hiredDate!.year}"
+                        : "Loading...",
+                    isEditable: false,
                   ),
                 ],
               ),

@@ -1,7 +1,9 @@
+import 'package:AlajozMotorsemployee/core/utils/assets.dart';
 import 'package:AlajozMotorsemployee/features/auth/presentation/views/login_screen.dart';
 import 'package:AlajozMotorsemployee/features/home/presentation/views/profile.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../auth/presentation/manager/user_cubit.dart';
 
 class HomeDrawer extends StatelessWidget {
   final String employeeName;
@@ -30,8 +32,7 @@ class HomeDrawer extends StatelessWidget {
                 children: [
                   const CircleAvatar(
                     radius: 35,
-                    backgroundImage:
-                        AssetImage('assets/images/undraw_female-avatar_7t6k(3).png'),
+                    backgroundImage: AssetImage(AssetsData.profile),
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -52,22 +53,70 @@ class HomeDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EmployeeProfile()),
+                MaterialPageRoute(
+                    builder: (context) => const EmployeeProfile()),
               );
             },
           ),
-          _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
-          _buildDrawerItem(icon: Icons.notifications, label: 'Notifications', onTap: () {}),
-          const Divider(),
           _buildDrawerItem(
-            icon: Icons.logout,
-            label: 'Logout',
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-              );
+              icon: Icons.settings, label: 'Settings', onTap: () {}),
+          _buildDrawerItem(
+              icon: Icons.notifications, label: 'Notifications', onTap: () {}),
+          const Divider(),
+          BlocListener<UserCubit, UserState>(
+            listener: (context, state) {
+              if (state is UserLoggedOut) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              } else if (state is UserError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
             },
+            child: _buildDrawerItem(
+              icon: Icons.logout,
+              label: 'Logout',
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('تسجيل الخروج'),
+                    content: const Text('هل أنت متأكد من تسجيل الخروج؟'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('إلغاء'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          // Get saved token and logout
+                          final token =
+                              await context.read<UserCubit>().getSavedToken();
+                          if (token != null) {
+                            context.read<UserCubit>().logout(token: token);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('لم يتم العثور على token'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        child: const Text('تسجيل الخروج'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

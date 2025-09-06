@@ -13,7 +13,7 @@ class GetStartedContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-       const SizedBox(height: 40),
+        const SizedBox(height: 40),
         const GetStartedImage(),
         const SizedBox(height: 50),
         const GetStartedTitle(),
