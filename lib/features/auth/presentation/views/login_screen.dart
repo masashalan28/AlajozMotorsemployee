@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<UserCubit, UserState>(
           listener: (context, state) {
             if (state is UserLoggedIn) {
-              // Navigate to home screen on successful login
+           
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               );
             } else if (state is UserError) {
-              // Show user-friendly error message
+              
               String errorMessage = _getUserFriendlyErrorMessage(state.message);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

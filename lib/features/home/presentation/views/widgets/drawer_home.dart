@@ -60,8 +60,6 @@ class HomeDrawer extends StatelessWidget {
           ),
           _buildDrawerItem(
               icon: Icons.settings, label: 'Settings', onTap: () {}),
-          _buildDrawerItem(
-              icon: Icons.notifications, label: 'Notifications', onTap: () {}),
           const Divider(),
           BlocListener<UserCubit, UserState>(
             listener: (context, state) {

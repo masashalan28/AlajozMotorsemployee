@@ -6,7 +6,7 @@ class GetStartedTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Text(
-      'Employee Portal',
+      'AL Ajoz Motors',
       style: TextStyle(
         fontSize: 28,
         fontWeight: FontWeight.bold,

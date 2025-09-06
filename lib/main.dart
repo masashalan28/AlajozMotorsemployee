@@ -6,7 +6,6 @@ import 'core/di/dependency_injection.dart';
 import 'features/auth/presentation/views/getstarted_screen.dart';
 
 void main() {
- 
   di.init();
 
   runApp(
@@ -14,13 +13,14 @@ void main() {
       providers: [
         BlocProvider(create: (_) => UserCubit(di.userRepo)),
       ],
-      child: AlajozMotorsemployee(),
+      child: const AlajozMotorsemployee(),
     ),
   );
 }
 
 class AlajozMotorsemployee extends StatelessWidget {
   const AlajozMotorsemployee({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

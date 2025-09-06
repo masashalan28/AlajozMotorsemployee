@@ -11,13 +11,12 @@ class PhoneTextField extends StatelessWidget {
       controller: controller ?? TextEditingController(),
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
-        hintText: 'Enter phone number',
+        hintText: ' Enter phone number',
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(7),
         ),
-      
         prefixIcon: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
           decoration: BoxDecoration(
             border: Border(
               right: BorderSide(color: Colors.grey.shade400, width: 1),
@@ -46,7 +45,6 @@ class PhoneTextField extends StatelessWidget {
     );
   }
 }
-
 
 class PasswordTextField extends StatelessWidget {
   final TextEditingController? controller;
